@@ -1,20 +1,16 @@
 const bearerToken = require('express-bearer-token');
 const jwt = require('jsonwebtoken');
-const uuid = require('uuid').v4;
 
 const { secret, expiresIn } = require('../../config').jwtConfig
-const User = require('../../db/models/user')
+const { User } = require('../../db/models')
 
 function generateToken(user) {
   const data = {
-    name: user.name,
-    email: user.email
+    id: user.id,
+    // email: user.email
   }
-  const jwtid = uuid();
-  return {
-    jti: jwtid,
-    token: jwt.sign({ data }, secret, { expiresIn: Number.parseInt(expiresIn), jwtid })
-  }
+  const token = jwt.sign({ data }, secret, { expiresIn: Number.parseInt(expiresIn, 10)})
+  return token;
 }
 
 function restoreUser(req, res, next) {
@@ -29,15 +25,15 @@ function restoreUser(req, res, next) {
       return next(err);
     }
 
-    const tokenId = payload.jti;
+    const { id } = jwtPayload.data;
 
     try {
-      req.user = await User.findByTokenId(tokenId);
+      req.user = await User.findByPk(id)
     } catch (e) {
       return next(e);
     }
 
-    if (!req.user.isValid()) {
+    if (!req.user) {
       return next({ status: 404, message: 'session not found' });
     }
 
