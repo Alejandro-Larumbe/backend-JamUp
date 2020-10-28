@@ -25,8 +25,35 @@ router.post('/', asyncHandler(async (req, res, next) => {
   res.status(201).json(jam);
 }))
 
-router.post('/:id', asyncHandler(async(req, res, next) => {
+router.get('/city/:cityId', asyncHandler(async(req, res, next) => {
+  const jams = await Jam.findAll({
+    where: {
+      cityId: req.params.cityId
+    },
+    include: {
+      model: User,
+      attributes: ['firstName', 'lastName', 'username']
+    }
+
+  })
+  res.json(jams)
+}))
+
+router.get('/:id', asyncHandler(async(req, res, next) => {
 
 }))
+
+router.patch('/:id', asyncHandler(async(req, res, next) => {
+
+}))
+
+router.delete('/:id', asyncHandler(async(req, res, next) => {
+
+}))
+
+router.get('/:id/users', asyncHandler(async(req, res, next) => {
+
+}))
+
 
 module.exports = router;
