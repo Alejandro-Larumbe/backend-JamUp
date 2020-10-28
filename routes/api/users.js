@@ -120,18 +120,26 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
 
     include: {
       model: Jam,
-      include: {
-        model: User,
-        // as: 'Host',
-        // where: {
-        //   id: {''}
-      }
-      // attributes: ['firstName', 'lastName']
+
     }
 
   })
-  console.log(jams)
-  res.json(jams)
+  const hosts = await Promise.all(
+    jams.map(async jam => {
+    console.log(jam.Jam.hostId)
+      const host = await User.findOne({
+      where: {
+        id: jam.Jam.hostId
+      },
+      attributes: ['firstName', 'lastName', 'username']
+
+    })
+    return host;
+  }))
+  console.log(hosts)
+
+
+  res.json({jams, hosts})
 }))
 
 
