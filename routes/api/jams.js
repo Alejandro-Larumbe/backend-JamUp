@@ -1,8 +1,63 @@
 const express = require('express');
 const router = express.Router();
 
-const { Jam, Jammer, User } = require('../../db/models');
+const { Jam, Jammer, User, City } = require('../../db/models');
 const asyncHandler = require('express-async-handler');
+const city = require('../../db/models/city');
+
+router.get('/cities', asyncHandler(async(req, res, next) => {
+  const cities = await City.findAll({
+    include: {
+      model: Jam,
+      include: {
+        model: User,
+        as: 'host',
+        attributes: ['firstName', 'lastName']
+      }
+    }
+  });
+
+  res.json(cities)
+}))
+
+router.get('/cities/:cityId', asyncHandler(async(req, res, next) => {
+  const jams = await Jam.findAll({
+    where: {
+      cityId: req.params.cityId
+    },
+    include: {
+      model: User,
+      as: "host",
+      attributes: ['firstName', 'lastName', 'username']
+    }
+  })
+  res.json(jams)
+}))
+
+router.get('/:id', asyncHandler(async(req, res, next) => {
+  const jam = await Jam.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: {
+      model: User,
+      as: 'host',
+      attributes: ['username', 'lastName', 'firstName']
+    },
+  })
+  const { Attending: attending } = await Jam.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: {
+      model: User,
+      as: 'attending',
+      attributes: ['username', 'lastName', 'firstName']
+    }
+  })
+
+  res.json( { jam, attending} );
+}))
 
 router.post('/', asyncHandler(async (req, res, next) => {
   const {
@@ -25,29 +80,50 @@ router.post('/', asyncHandler(async (req, res, next) => {
   res.status(201).json(jam);
 }))
 
-router.get('/city/:cityId', asyncHandler(async(req, res, next) => {
-  const jams = await Jam.findAll({
-    where: {
-      cityId: req.params.cityId
+router.patch('/:id', asyncHandler(async (req, res, next) => {
+  const id = req.params.jamId
+
+  const {
+    time,
+    date,
+    cityId,
+    hostId,
+    address,
+    description
+  } = req.body;
+
+  await Jam.update({
+    id,
+    time,
+    date,
+    hostId,
+    cityId,
+    address,
+    description
+  });
+
+  const token = generateToken(user)
+  res.status(201).json({
+    user: {
+      id: user.id
     },
-    include: {
-      model: User,
-      attributes: ['firstName', 'lastName', 'username']
-    }
-
+    token
   })
-  res.json(jams)
-}))
-
-router.get('/:id', asyncHandler(async(req, res, next) => {
-
-}))
-
-router.patch('/:id', asyncHandler(async(req, res, next) => {
 
 }))
 
 router.delete('/:id', asyncHandler(async(req, res, next) => {
+  const id = req.params.id
+  const jam = await Jam.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+
+  await jam.destroy();
+  res.json({
+    message: `Jam id: ${id} destroyed`
+  })
 
 }))
 

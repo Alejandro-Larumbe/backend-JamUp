@@ -41,6 +41,8 @@ function restoreUser(req, res, next) {
   })
 }
 
+
+
 const authenticated = [bearerToken(), restoreUser]
 
 module.exports = { generateToken, authenticated };

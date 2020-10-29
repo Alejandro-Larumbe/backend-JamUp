@@ -10,13 +10,14 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Jam.associate = function(models) {
     const columnMapping = {
+      as: "attending",
       through: "Jammer",
       otherKey: "userId",
       foreignKey: "jamId"
     }
     Jam.belongsToMany(models.User, columnMapping)
     Jam.belongsTo(models.City, { foreignKey: 'cityId' })
-    Jam.belongsTo(models.User, { foreignKey: 'hostId' })
+    Jam.belongsTo(models.User, { as: 'host', foreignKey: 'hostId' })
     Jam.hasMany(models.Jammer, { foreignKey: 'jamId' })
   };
   return Jam;
