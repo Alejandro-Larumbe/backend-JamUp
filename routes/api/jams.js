@@ -7,29 +7,51 @@ const city = require('../../db/models/city');
 
 router.get('/cities', asyncHandler(async(req, res, next) => {
   const cities = await City.findAll({
-    include: {
-      model: Jam,
-      include: {
-        model: User,
-        as: 'host',
-        attributes: ['firstName', 'lastName']
-      }
-    }
+    attributes: ["id", "name", 'photoUrl']
+    // include: {
+    //   model: Jam,
+    //   include: {
+    //     model: User,
+    //     as: 'host',
+    //     attributes: ['firstName', 'lastName']
+    //   }
+    // }
   });
 
   res.json(cities)
 }))
 
-router.get('/cities/:cityId', asyncHandler(async(req, res, next) => {
+// router.get('/cities/:cityId', asyncHandler(async(req, res, next) => {
+//   const jams = await Jam.findAll({
+//     where: {
+//       cityId: req.params.cityId
+//     },
+//     include: {
+//       model: User,
+//       as: "host",
+//       attributes: ['firstName', 'lastName', 'username']
+//     }
+//   })
+//   res.json(jams)
+// }))
+router.get('/cities/:id', asyncHandler(async(req, res, next) => {
+  const  id  = req.params.id
   const jams = await Jam.findAll({
     where: {
-      cityId: req.params.cityId
+      cityId: id,
     },
-    include: {
-      model: User,
-      as: "host",
-      attributes: ['firstName', 'lastName', 'username']
-    }
+    include: [
+      {
+        model: User,
+        as: "host",
+        attributes: ['firstName', 'lastName', 'username'],
+      },
+      {
+        model: User,
+        as: "attending",
+        attributes: ['firstName', 'lastName', 'username'],
+      },
+    ]
   })
   res.json(jams)
 }))
