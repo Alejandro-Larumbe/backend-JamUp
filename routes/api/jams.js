@@ -44,12 +44,12 @@ router.get('/cities/:id', asyncHandler(async(req, res, next) => {
       {
         model: User,
         as: "host",
-        attributes: ['firstName', 'lastName', 'username'],
+        attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
       },
       {
         model: User,
         as: "attending",
-        attributes: ['firstName', 'lastName', 'username'],
+        attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
       },
     ]
   })
@@ -64,7 +64,7 @@ router.get('/:id', asyncHandler(async(req, res, next) => {
     include: {
       model: User,
       as: 'host',
-      attributes: ['username', 'lastName', 'firstName']
+      attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
     },
   })
   const { Attending: attending } = await Jam.findOne({
@@ -74,7 +74,7 @@ router.get('/:id', asyncHandler(async(req, res, next) => {
     include: {
       model: User,
       as: 'attending',
-      attributes: ['username', 'lastName', 'firstName']
+      attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
     }
   })
 
