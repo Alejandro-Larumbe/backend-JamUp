@@ -87,7 +87,7 @@ router.post('/', asyncHandler(async (req, res, next) => {
     date,
     hostId,
     cityId,
-    address,
+    streetAddress,
     description
   } = req.body;
 
@@ -96,7 +96,7 @@ router.post('/', asyncHandler(async (req, res, next) => {
     date,
     hostId,
     cityId,
-    address,
+    streetAddress,
     description
   })
   res.status(201).json(jam);
@@ -110,7 +110,7 @@ router.patch('/:id', asyncHandler(async (req, res, next) => {
     date,
     cityId,
     hostId,
-    address,
+    streetAddress,
     description
   } = req.body;
 
@@ -120,7 +120,7 @@ router.patch('/:id', asyncHandler(async (req, res, next) => {
     date,
     hostId,
     cityId,
-    address,
+    streetAddress,
     description
   });
 
