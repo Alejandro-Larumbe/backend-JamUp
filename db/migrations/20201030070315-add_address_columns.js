@@ -38,7 +38,7 @@ module.exports = {
       queryInterface.removeColumn('Jam', 'state', { id: Sequelize.INTEGER }),
       queryInterface.removeColumn('Jam', 'zipCode', { id: Sequelize.INTEGER }),
       queryInterface.removeColumn('Jam', 'country', { id: Sequelize.INTEGER }),
-      queryInterface.addColumns('Jam', 'address', {
+      queryInterface.addColumn('Jam', 'address', {
         type: Sequelize.STRING(100),
         allowNull: false,
       }),
