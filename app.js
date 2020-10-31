@@ -15,7 +15,7 @@ const routes = require('./routes');
 
 // view engine setup
 app.set('view engine', 'pug');
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
