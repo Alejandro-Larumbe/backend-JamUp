@@ -33,11 +33,16 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('Jams', "streetAddress", { id: Sequelize.INTEGER }),
-      queryInterface.removeColumn('Jams', 'city', { id: Sequelize.INTEGER }),
-      queryInterface.removeColumn('Jams', 'state', { id: Sequelize.INTEGER }),
-      queryInterface.removeColumn('Jams', 'zipCode', { id: Sequelize.INTEGER }),
-      queryInterface.removeColumn('Jams', 'country', { id: Sequelize.INTEGER }),
+      queryInterface.removeColumn('Jam', "streetAddress", { id: Sequelize.INTEGER }),
+      queryInterface.removeColumn('Jam', 'city', { id: Sequelize.INTEGER }),
+      queryInterface.removeColumn('Jam', 'state', { id: Sequelize.INTEGER }),
+      queryInterface.removeColumn('Jam', 'zipCode', { id: Sequelize.INTEGER }),
+      queryInterface.removeColumn('Jam', 'country', { id: Sequelize.INTEGER }),
+      queryInterface.addColums('Jam', 'address', {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      }),
+
     ])
     /*
       Add reverting commands here.
