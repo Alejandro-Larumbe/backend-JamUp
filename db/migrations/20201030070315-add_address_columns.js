@@ -33,7 +33,6 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('Jam', "streetAddress", { id: Sequelize.INTEGER }),
       queryInterface.removeColumn('Jam', 'city', { id: Sequelize.INTEGER }),
       queryInterface.removeColumn('Jam', 'state', { id: Sequelize.INTEGER }),
       queryInterface.removeColumn('Jam', 'zipCode', { id: Sequelize.INTEGER }),
