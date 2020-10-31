@@ -99,10 +99,7 @@ module.exports = {
         hostId: host(),
         cityId: random6(),
         description: descriptions[i],
-        streetAddress: faker.address.streetAddress(),
-        state: faker.address.state(),
-        zipCode: 91950,
-        country: countries[i],
+        address: faker.address.streetAddress(),
       })
     }
 
