@@ -226,8 +226,8 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
 }))
 
 router.delete('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
-  userId = req.params.id
-  jamId = req.params.jamId
+  userId = parseInt(req.params.id)
+  jamId = parseInt(req.params.jamId)
 
   const jam = await Jammer.findOne({
     where: {
@@ -240,6 +240,19 @@ router.delete('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
 
   res.json({
     message: `Jam userId: ${userId} jamid: ${jamId} destroyed`
+  })
+}))
+
+router.post('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
+  const body = {
+    userId: req.params.id,
+    jamId: req.params.jamId
+}
+
+  await Jammer.create(body)
+
+  res.json({
+    message: `serId: ${userId} going to jam ${jamId} `
   })
 }))
 

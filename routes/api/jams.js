@@ -44,12 +44,12 @@ router.get('/cities/:id', asyncHandler(async(req, res, next) => {
       {
         model: User,
         as: "host",
-        attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
+        attributes: ['id', 'username', 'lastName', 'firstName', 'instrument', 'photoUrl']
       },
       {
         model: User,
         as: "attending",
-        attributes: ['username', 'lastName', 'firstName', 'instrument', 'photoUrl']
+        attributes: ['id', 'username', 'lastName', 'firstName', 'instrument', 'photoUrl']
       },
     ]
   })
