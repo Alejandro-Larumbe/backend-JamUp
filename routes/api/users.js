@@ -164,7 +164,7 @@ router.patch('/:id', asyncHandler(async (req, res, next) => {
     cityId,
     instrument,
     email,
-    photoUrl
+    // photoUrl
   } = req.body;
 
   await user.update({
@@ -174,35 +174,54 @@ router.patch('/:id', asyncHandler(async (req, res, next) => {
     cityId,
     instrument,
     email,
-    photoUrl
+    // photoUrl
   })
 
-  const token = generateToken(user)
+  // const token = generateToken(user)
   res.status(201).json({
     user: {
       id: user.id
     },
-    token
+    // token
   })
 }));
 
 router.get('/:id/jams', asyncHandler(async (req, res, next) => {
   console.log('id: ', req.params.id)
-  const host = await User.findOne({
-    where: {
-      id: req.params.id,
-    },
-    attributes: ['username', 'firstName', 'lastName']
-  })
+  id = parseInt(req.params.id)
 
   const jams = await Jam.findAll({
     where: {
       hostId: req.params.id,
     },
+    attributes: ['time', 'date', 'hostId', 'cityId', 'address', 'description' ],
+    include:
+    {
+      model: User,
+      as: 'attending',
+      attributes: ["username", "firstName", "lastName", "cityId", "instrument", "email", "photoUrl"]
+    },
   })
   console.log(jams)
-  res.json({ host, jams })
+  res.json({ jams })
 }))
+// router.get('/:id/jams', asyncHandler(async (req, res, next) => {
+//   console.log('id: ', req.params.id)
+//   const host = await User.findOne({
+//     where: {
+//       id: req.params.id,
+//     },
+//     attributes: ['username', 'firstName', 'lastName']
+//   })
+
+//   const jams = await Jam.findAll({
+//     where: {
+//       hostId: req.params.id,
+//     },
+//   })
+//   console.log(jams)
+//   res.json({ host, jams })
+// }))
 
 
 router.post('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
@@ -229,16 +248,17 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
     },
     include: {
       model: Jam,
+      attributes: ['time', 'date', 'hostId', 'cityId', 'address', 'description' ],
       include: [
-        {
-          model: User,
-          as: 'host',
-          attributes: ['firstName', 'lastName', 'username']
-        },
+        // {
+        //   model: User,
+        //   as: 'host',
+        //   attributes: ['firstName', 'lastName', 'username']
+        // },
         {
           model: User,
           as: 'attending',
-          attributes: ['firstName', 'lastName', 'username']
+          attributes: ["username", "firstName", "lastName", "instrument", "photoUrl"]
         },
       ]
     }
