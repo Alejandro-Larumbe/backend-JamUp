@@ -26,44 +26,44 @@ const handleValidationErrors = (req, res, next) => {
 
 const validateEmailAndPassword = [
   check('email')
-  .exists({ checkFalsy: true })
-  .withMessage('Please enter email address')
-  .isLength( { min: 8 })
-  .withMessage('Username must be at least 8 characters long')
-  .isEmail()
-  .withMessage('Please enter a valid e-mail address'),
+    .exists({ checkFalsy: true })
+    .withMessage('Please enter email address')
+    .isLength({ min: 8 })
+    .withMessage('Username must be at least 8 characters long')
+    .isEmail()
+    .withMessage('Please enter a valid e-mail address'),
   check('password')
-  .exists({
-    checkFalsy: true
-  })
-  .withMessage('Please enter password')
+    .exists({
+      checkFalsy: true
+    })
+    .withMessage('Please enter password')
 ]
 
 const validateUserNameInputs = [
   check('username')
-    .exists( { checkFalsy : true })
+    .exists({ checkFalsy: true })
     .withMessage('Please enter a username')
-    .isLength( { max: 30 })
+    .isLength({ max: 30 })
     .withMessage('Username must not exceed 30 characters'),
   check('firstName')
-    .exists( { checkFalsy : true })
+    .exists({ checkFalsy: true })
     .withMessage('Please enter your first name')
-    .isLength( { max: 25 })
+    .isLength({ max: 25 })
     .withMessage('First Name must not exceed 25 characters'),
   check('lastName')
-    .exists( { checkFalsy : true })
+    .exists({ checkFalsy: true })
     .withMessage('Please enter your last name')
-    .isLength( { max: 25 })
+    .isLength({ max: 25 })
     .withMessage('Last Name must not exceed 25 characters'),
-  ]
+]
 
 const validateUserProfileInputs = [
   check('cityId')
-  .exists( { checkFalsy : true })
-  .withMessage('Please select a city'),
+    .exists({ checkFalsy: true })
+    .withMessage('Please select a city'),
   check('instrument')
-  .exists( { checkFalsy : true })
-  .withMessage('Please select an instrument')
+    .exists({ checkFalsy: true })
+    .withMessage('Please select an instrument')
 
 ]
 
@@ -103,14 +103,12 @@ router.post('/', validateUserProfileInputs, validateUserNameInputs, validateEmai
 
   const token = generateToken(user)
   res.status(201).json({
-    user: {
-      id: user.id
-    },
+      id: user.id,
     token
   })
 }));
 
-router.post('/token', validateEmailAndPassword, handleValidationErrors, (async(req, res, next) => {
+router.post('/token', validateEmailAndPassword, handleValidationErrors, (async (req, res, next) => {
   const {
     email,
     password
@@ -122,7 +120,7 @@ router.post('/token', validateEmailAndPassword, handleValidationErrors, (async(r
     }
   })
 
-  if (!user ) {
+  if (!user) {
     const err = new Error('User not found');
     err.status = 401;
     err.title = 'User not found';
@@ -143,7 +141,7 @@ router.post('/token', validateEmailAndPassword, handleValidationErrors, (async(r
   const token = generateToken(user)
   const id = user.id
   console.log(token)
-  res.json( { token, id })
+  res.json({ token, id })
 
 }));
 
@@ -206,22 +204,51 @@ router.get('/:id/jams', asyncHandler(async (req, res, next) => {
   res.json({ host, jams })
 }))
 
+
+router.post('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
+
+    userId = parseInt(req.params.id),
+    jamId = parseInt(req.params.jamId)
+
+
+  await Jammer.create( {
+    userId,
+    jamId
+  } )
+
+  res.json({
+    message: `serId: ${userId} going to jam ${jamId} `
+  })
+}))
+
 router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
   console.log('id: ', req.params.id)
-  const jams = await Jammer.findAll({
+  const allJams = await Jammer.findAll({
     where: {
       userId: req.params.id,
     },
     include: {
       model: Jam,
-      include: {
-        model: User,
-        as: 'host',
-        attributes: ['firstName', 'lastName', 'username']
-      }
+      include: [
+        {
+          model: User,
+          as: 'host',
+          attributes: ['firstName', 'lastName', 'username']
+        },
+        {
+          model: User,
+          as: 'attending',
+          attributes: ['firstName', 'lastName', 'username']
+        },
+      ]
     }
   })
+  jams = []
+  allJams.map(jam => {
+    jams.push(jam.Jam)
+  })
 
+  // res.json({ jams })
   res.json({ jams })
 }))
 
@@ -243,17 +270,5 @@ router.delete('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
   })
 }))
 
-router.post('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
-  const body = {
-    userId: req.params.id,
-    jamId: req.params.jamId
-}
-
-  await Jammer.create(body)
-
-  res.json({
-    message: `serId: ${userId} going to jam ${jamId} `
-  })
-}))
 
 module.exports = router;
