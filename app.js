@@ -15,12 +15,31 @@ const routes = require('./routes');
 
 // view engine setup
 app.set('view engine', 'pug');
-app.use(cors());
+
+// app.use(cors());
+const whitelist = ['http://localhost:3000'];
+const corsOptions = {
+  credentials: true, // This is important.
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin)) {
+      return callback(null, true)
+    }
+    callback(new Error('Not allowed by CORS'));
+  }
+}
+
+app.use(cors(corsOptions));
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   next();
+// });
 
 app.use(routes)
 

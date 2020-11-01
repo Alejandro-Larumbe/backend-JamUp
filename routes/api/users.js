@@ -154,7 +154,7 @@ router.get('/:id', asyncHandler(async (req, res, next) => {
   res.json({ user })
 }))
 
-router.patch('/:id', asyncHandler(async (req, res, next) => {
+router.put('/:id', asyncHandler(async (req, res, next) => {
   const user = await User.findByPk(req.params.id)
 
   const {
