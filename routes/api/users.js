@@ -194,7 +194,7 @@ router.get('/:id/jams', asyncHandler(async (req, res, next) => {
     where: {
       hostId: req.params.id,
     },
-    attributes: ['time', 'date', 'hostId', 'cityId', 'address', 'description' ],
+    attributes: ['id', 'time', 'date', 'hostId', 'cityId', 'address', 'description' ],
     include:
     {
       model: User,
@@ -248,7 +248,7 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
     },
     include: {
       model: Jam,
-      attributes: ['time', 'date', 'hostId', 'cityId', 'address', 'description' ],
+      attributes: ['id', 'time', 'date', 'hostId', 'cityId', 'address', 'description' ],
       include: [
         // {
         //   model: User,
@@ -258,7 +258,7 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
         {
           model: User,
           as: 'attending',
-          attributes: ["username", "firstName", "lastName", "instrument", "photoUrl"]
+          attributes: ['id', "username", "firstName", "lastName", "instrument", "photoUrl"]
         },
       ]
     }
@@ -269,7 +269,7 @@ router.get('/:id/jammer', asyncHandler(async (req, res, next) => {
   })
 
   // res.json({ jams })
-  res.json({ jams })
+  res.json( jams )
 }))
 
 router.delete('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
@@ -288,6 +288,23 @@ router.delete('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
   res.json({
     message: `Jam userId: ${userId} jamid: ${jamId} destroyed`
   })
+}))
+router.get('/:id/jammer/:jamId', asyncHandler(async (req, res, next) => {
+  userId = parseInt(req.params.id)
+  jamId = parseInt(req.params.jamId)
+
+  const count = await Jammer.findAndCountAll({
+    where: {
+      userId,
+      jamId
+    }
+  })
+
+
+
+  res.json(
+    count
+  )
 }))
 
 

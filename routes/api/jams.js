@@ -4,8 +4,9 @@ const router = express.Router();
 const { Jam, Jammer, User, City } = require('../../db/models');
 const asyncHandler = require('express-async-handler');
 const city = require('../../db/models/city');
+const { dateParser, timeParser } = require('./dateUtils')
 
-router.get('/cities', asyncHandler(async(req, res, next) => {
+router.get('/cities', asyncHandler(async (req, res, next) => {
   const cities = await City.findAll({
     attributes: ["id", "name", 'photoUrl']
     // include: {
@@ -34,8 +35,8 @@ router.get('/cities', asyncHandler(async(req, res, next) => {
 //   })
 //   res.json(jams)
 // }))
-router.get('/cities/:id', asyncHandler(async(req, res, next) => {
-  const  id  = req.params.id
+router.get('/cities/:id', asyncHandler(async (req, res, next) => {
+  const id = req.params.id
   const jams = await Jam.findAll({
     where: {
       cityId: id,
@@ -56,7 +57,7 @@ router.get('/cities/:id', asyncHandler(async(req, res, next) => {
   res.json(jams)
 }))
 
-router.get('/:id', asyncHandler(async(req, res, next) => {
+router.get('/:id', asyncHandler(async (req, res, next) => {
   const jam = await Jam.findOne({
     where: {
       id: req.params.id
@@ -78,25 +79,30 @@ router.get('/:id', asyncHandler(async(req, res, next) => {
     }
   })
 
-  res.json( { jam, attending} );
+  res.json({ jam, attending });
 }))
 
 router.post('/', asyncHandler(async (req, res, next) => {
+
   const {
-    time,
-    date,
+    selectedDate,
     hostId,
     cityId,
-    streetAddress,
+    address,
     description
   } = req.body;
+  console.log(req.body)
+
+
+  const time = timeParser(selectedDate)
+  const date = dateParser(selectedDate)
 
   const jam = await Jam.create({
     time,
     date,
     hostId,
     cityId,
-    streetAddress,
+    address,
     description
   })
   res.status(201).json(jam);
@@ -104,23 +110,25 @@ router.post('/', asyncHandler(async (req, res, next) => {
 
 router.patch('/:id', asyncHandler(async (req, res, next) => {
   const id = req.params.jamId
+  const jam = await Jam.findByPk(parseInt(id))
 
   const {
-    time,
-    date,
+    selectedDate,
     cityId,
     hostId,
-    streetAddress,
+    address,
     description
   } = req.body;
 
-  await Jam.update({
-    id,
+  const date = dateParser(selectedDate)
+  const time = timeParser(selectedDate)
+
+  await jam.update({
     time,
     date,
     hostId,
     cityId,
-    streetAddress,
+    address,
     description
   });
 
@@ -134,8 +142,8 @@ router.patch('/:id', asyncHandler(async (req, res, next) => {
 
 }))
 
-router.delete('/:id', asyncHandler(async(req, res, next) => {
-  const id = req.params.id
+router.delete('/:id', asyncHandler(async (req, res, next) => {
+  const id = parseInt(req.params.id)
   const jam = await Jam.findOne({
     where: {
       id: req.params.id
@@ -149,7 +157,7 @@ router.delete('/:id', asyncHandler(async(req, res, next) => {
 
 }))
 
-router.get('/:id/users', asyncHandler(async(req, res, next) => {
+router.get('/:id/users', asyncHandler(async (req, res, next) => {
 
 }))
 
