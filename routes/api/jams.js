@@ -96,6 +96,7 @@ router.post('/', asyncHandler(async (req, res, next) => {
 
   const time = timeParser(selectedDate)
   const date = dateParser(selectedDate)
+  console.log('here')
 
   const jam = await Jam.create({
     time,

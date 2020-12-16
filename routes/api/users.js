@@ -155,7 +155,7 @@ router.get('/:id', asyncHandler(async (req, res, next) => {
 }))
 
 router.put('/:id', asyncHandler(async (req, res, next) => {
-  const user = await User.findByPk(req.params.id)
+  const user = await User.findByPk(parseInt(req.params.id))
 
   const {
     username,

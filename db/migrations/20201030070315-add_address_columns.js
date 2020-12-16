@@ -1,7 +1,8 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  async up (queryInterface, Sequelize) {
+    await  null
     // return Promise.all([
     //   queryInterface.addColumn('Jam', 'state', {
     //     type: Sequelize.STRING(50),
@@ -27,6 +28,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
+    return null
     // return Promise.all([
     //   queryInterface.removeColumn('Jam', 'country', { id: Sequelize.INTEGER }),
     //   queryInterface.addColumn('Jam', 'address', {

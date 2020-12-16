@@ -17,7 +17,7 @@ const routes = require('./routes');
 app.set('view engine', 'pug');
 
 // app.use(cors());
-const whitelist = ['http://localhost:3000'];
+const whitelist = ['http://localhost:3000', 'https://main.d3vj1d3bz2pdf4.amplifyapp.com'];
 const corsOptions = {
   credentials: true, // This is important.
   origin: (origin, callback) => {
