@@ -6,7 +6,7 @@ module.exports = {
     let jams = [];
 
     function host() {
-      return Math.floor(Math.random() * 10)
+      return Math.floor(Math.random() * 10) + 1
     }
     function time() {
       return Math.floor(Math.random() * 6) -1
